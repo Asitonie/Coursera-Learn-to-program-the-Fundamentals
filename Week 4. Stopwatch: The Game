@@ -1,0 +1,69 @@
+# template for "Stopwatch: The Game"
+import simplegui
+# define global variables
+count = 0
+time = "0:00.0"
+stop_time = 0
+stop = False
+correct_time = 0
+# define helper function format that converts time
+# in tenths of seconds into formatted string A:BC.D
+def format():
+    global count,time,seconds,milliseconds
+    minutes = count//600
+    if count % 600 > 99 :
+        seconds = str(count % 600)[:2]
+        milliseconds =str(count % 600)[2]
+    elif (count % 600 < 100) and (count % 600 > 9):
+        seconds = "0" + str(count % 600)[0]
+        milliseconds =str(count % 600)[1]
+    elif (count % 600 < 9):
+        seconds = "00"
+        milliseconds =str(count % 600)[0]
+    time = str(minutes)+":"+seconds+"."+milliseconds
+    return time
+# calculte the number of successful stop
+# define event handlers for buttons; "Start", "Stop", "Reset"
+def start():
+    global stop
+    timer.start()
+    stop = False
+def stop():
+    global stop_time,count,stop,correct_time
+    timer.stop()
+    if stop == False:
+        stop_time = stop_time + 1
+        stop = True
+        if count % 10 == 0:
+            correct_time = 1 + correct_time
+def reset():
+    global count,stop,stop_time,correct_time
+    timer.stop()
+    Stop = True
+    stop_time = 0
+    count = 0
+    correct_time = 0
+# define event handler for timer with 0.1 sec interval
+def tick():
+    global count
+    count = count + 1
+    return count
+# define draw handler
+def draw(canvas):
+    global time,count,stop_time,correct_time
+    format()
+    canvas.draw_text(time,(125,150),50,'White')
+    canvas.draw_text(str(correct_time)+"/"+str(stop_time),(300,50),20,'Red')
+# create frame
+frame = simplegui.create_frame("Stopwatch: The Game",400,300)
+
+# register event handlers
+timer = simplegui.create_timer(100,tick)
+frame.add_button('start',start)
+frame.add_button('stop',stop)
+frame.add_button('reset',reset)
+frame.set_draw_handler(draw)
+# start frame
+frame.start()
+
+# Please remember to review the grading rubric
